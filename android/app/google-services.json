@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "759757366905",
+    "project_id": "cricheroes-9190c",
+    "storage_bucket": "cricheroes-9190c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759757366905:android:28d722884e3a2a80ce16a8",
+        "android_client_info": {
+          "package_name": "com.cricheroes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDISjMcrzFNaGgpvUSyq2p4grjQOx-8Evg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
