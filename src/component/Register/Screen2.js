@@ -11,8 +11,8 @@ export default function Screen2() {
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
   const navigation=useNavigation()
-  const {name,age,email,password}=useRoute().params
-  console.log("Name : "+name+",Age : "+age+",Email : "+email+",Password : "+password)
+  const {name,age}=useRoute().params
+  console.log("Name : "+name+",Age : "+age)
 
   // verification code (OTP - One-Time-Passcode)
   const [code, setCode] = useState('');
@@ -52,6 +52,25 @@ export default function Screen2() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
+  const pushData=()=>{
+    const path='/user/'+auth().currentUser.uid
+    
+    database()
+    .ref(path)
+    .set({
+        name:name,
+        age:age,
+        phone:countryCode+""+phoneNumber
+    })
+    .then(() => {
+        console.log('Data set.')
+        Alert.alert("Authentication success")
+                navigation.navigate("Dashboard")
+                
+    })
+    .catch((err)=>console.log(err))
+}
+
   // Handle the button press
   async function signInWithPhoneNumber(phoneNumber) {
     setLoading(true)
@@ -64,16 +83,8 @@ export default function Screen2() {
         setLoading(true)
       await confirm.confirm(one+two+three+four+five+six).then(()=>{
         setLoading(false)
-        
-         auth().signOut().then(()=>{
-              Alert.alert("Authentication success")
-                navigation.navigate("Login")
-         })
-
-
-        
         console.log("Success")
-        
+        pushData()
       })
       
     } catch (error) {

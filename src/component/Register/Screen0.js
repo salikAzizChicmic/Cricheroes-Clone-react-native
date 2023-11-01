@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { firebase } from '@react-native-firebase/database';
 import database from '@react-native-firebase/database';
@@ -14,6 +14,10 @@ const Screen0 = () => {
     const navigation=useNavigation()
 
     const {name,age}=useRoute().params
+
+    useEffect(()=>{
+        navigation.navigate("Screen2",{name:name,age:age})
+    },[])
 
     const handleInput=(text)=>{
         setInpText(text.trim())
