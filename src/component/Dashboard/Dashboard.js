@@ -1,17 +1,62 @@
-import React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { style } from './Style';
+import UserPost from '../Post/UserPost';
+import { firebase } from '@react-native-firebase/database';
+import database from '@react-native-firebase/database';
+
 
 const Dashboard = () => {
   const navigation=useNavigation()
+  const [mapData,setMapData]=useState([]);
   const handleLogout=()=>{
     auth().signOut().then(()=>{
       navigation.popToTop()
       navigation.navigate("Login")
     })
   }
+
+  const getAllPost=()=>{
+    const path='/user'
+  
+      database()
+      .ref(path)
+      .once('value')
+      .then(snapshot => {
+        
+         
+         //x--> uid ,y --> post id
+         let allPost=[];
+         for(let x in snapshot.val()){
+          var pid=x;
+          
+           for(let y in snapshot.val()[x].post){
+              pid=y;
+              allPost.push({
+                uid:x,
+                pid:y,
+                des:snapshot.val()[x].post[y].des,
+                img:snapshot.val()[x].post[y].image,
+                name:snapshot.val()[x].post[y].name,
+              })
+              
+           }
+           
+          
+         }
+         console.log(allPost)
+          setMapData(allPost)
+      })
+      .catch((err)=>{
+          console.log(err)
+      })
+  }
+
+  useEffect(()=>{
+    getAllPost()
+  },[])
 
   return (
     <View>
@@ -34,9 +79,31 @@ const Dashboard = () => {
 
           </View>
        </View>
-       <TouchableOpacity onPress={()=>navigation.navigate("RenderMatch")}  style={{backgroundColor:'#367545',marginVertical:200,borderRadius:10,width:"70%",marginHorizontal:70}} >
-            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:105}} >Details</Text>
-        </TouchableOpacity>
+       {/* //user post request */}
+      <ScrollView style={{height:'84.5%'}}>
+        {mapData.map((ele,ind)=>{
+         return <UserPost uid={ele.uid} pid={ele.pid} name={ele.name} des={ele.des} image={ele.img} key={ind} />
+        })}
+      </ScrollView>  
+        <View style={{flexDirection:'row',justifyContent:'space-around',width:'100%',height:'105%',position:'absolute',backgroundColor:'white',marginTop:"192.2%"}}>
+            <TouchableOpacity onPress={()=>navigation.navigate("RenderMatch")} >
+              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/detail.png')} />
+              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Match\nDetails`}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>navigation.navigate("CreatePost")} >
+              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/edit.png')} />
+              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Create\nPost`}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/post.png')} />
+              <Text style={{fontSize:10,fontWeight:'bold'}}>{`My\nPosts`}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/notification.png')} />
+              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Notify\nDetails`}</Text>
+            </TouchableOpacity>
+        </View>
     </View>
   )
 }

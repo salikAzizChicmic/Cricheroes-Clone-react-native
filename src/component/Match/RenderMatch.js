@@ -43,7 +43,7 @@ const RenderMatch = () => {
     },[])
   return (
     <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center'}}>
-    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={{width:'100%',height:'11%',backgroundColor:'white'}}>
+    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={{width:'100%',height:60,backgroundColor:'white'}}>
         <Image style={{height:40,width:40,marginHorizontal:10,marginVertical:5}} source={require('../../Assets/previous.png')} />
     </TouchableOpacity>
         <Text style={{fontSize:25,fontWeight:'bold',marginTop:20}}>Match Details</Text>

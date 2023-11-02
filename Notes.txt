@@ -1,1 +1,0 @@
-Working on cricheroes clone, 1) Designed match schedule logic spread over different components ==> a) Opponent team selection page, b)Create match page -: Here user needs to fill important match details to schedule a match with opponent. c) View match details page -: This page includes details of matches which are scheduled and their status.

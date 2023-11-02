@@ -46,7 +46,7 @@ const AddTeam = () => {
     }
     const getData=()=>{
         console.log("get Data")
-        const path='/user/mXTSz1GTWtgZpyIYYW2tSQ9M5X02/Player'
+        const path='/user/Player'
     
         database()
         .ref(path)
@@ -100,7 +100,7 @@ const AddTeam = () => {
         <Image style={{height:40,width:40,marginHorizontal:10,marginVertical:5}} source={require('../../Assets/previous.png')} />
     </TouchableOpacity>
         <Text style={{fontSize:20,fontWeight:'bold',marginTop:40}} >Create Team({total})</Text>
-        <ScrollView>
+        <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{height:"75%"}}>
         {curTeam.map((ele,ind)=>{
            return <View pointerEvents={(total===11 && ele.selected===false)?"none":'auto'} key={ind} style={{flexDirection:'row'}}><TouchableOpacity onPress={()=>handelPlayer(ind,ele.name)} style={{borderWidth:1,borderColor:ele.selected?'green':'grey',marginTop:10,borderRadius:10}} key={ind} >
                 <Text style={{fontSize:20,fontWeight:'bold',color:ele.selected?'green':'grey',marginHorizontal:10,marginVertical:5}} >{ele.name}</Text>
