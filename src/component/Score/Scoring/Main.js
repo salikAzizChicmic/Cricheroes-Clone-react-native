@@ -239,27 +239,39 @@ const Main = () => {
     // console.log(data)
     // return data;
   }
-  const score=async(val)=>{
+  const[extraBall,setExtraBall]=useState(0)
+  const score=async(val,ballCount)=>{
     setBowling([...bowling,val])
+    if(ballCount===0) setExtraBall(extraBall+1)
     if(val%2===0){
       if(striker===0){
-        setFirstScorer(firstScorer+val)
-        setFirstScorerBall(firstScorerBall+1)
-        setStriker(0)
+        
+        if(ballCount!==0){
+          setFirstScorer(firstScorer+val)
+          setFirstScorerBall(firstScorerBall+1)
+          setStriker(0)
+        }
+       
       }else{
-        setSecondScorer(secondScorer+val)
-        setSecondScorerBall(secondScorerBall+1)
-        setStriker(1)
+        if(ballCount!==0){
+          setSecondScorer(secondScorer+val)
+          setSecondScorerBall(secondScorerBall+1)
+          setStriker(1)
+        }
       }
     }else{
       if(striker===1){
-        setSecondScorer(secondScorer+val)
+        if(ballCount!==0){
+          setSecondScorer(secondScorer+val)
         setSecondScorerBall(secondScorerBall+1)
         setStriker(0)
+        }
       }else{
-        setFirstScorer(firstScorer+val)
+        if(ballCount!==0){
+          setFirstScorer(firstScorer+val)
         setFirstScorerBall(firstScorerBall+1)
         setStriker(1)
+        }
       }
     }
     
@@ -274,22 +286,27 @@ const Main = () => {
         if((total+val)>inning1Score ){
           if(batFirst===0){
             Alert.alert(name)
+            navigation.navigate("Dashboard")
           }else{
             Alert.alert(myname)
+            navigation.navigate("Dashboard")
           }
           
         }else if(bowling.length===5){
            if(inning1Score>(total+val)){
             if(batFirst===0){
               Alert.alert(myname)
+              navigation.navigate("Dashboard")
             }else{
               Alert.alert(name)
+              navigation.navigate("Dashboard")
             }
           }else{
             Alert.alert("Draw")
+            navigation.navigate("Dashboard")
           }
         }
-        navigation.navigate("Dashboard")
+        
       }
      })
     
@@ -333,6 +350,7 @@ const Main = () => {
           setSecondScorer(0)
           setFirstScorerBall(0)
           setSecondScorerBall(0)
+          setExtraBall(0)
         if(batFirst===0){
           setTeamName(`${name.split(' ')[0]}'s team`)
           
@@ -377,7 +395,7 @@ const Main = () => {
          <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center',marginHorizontal:78,marginTop:160}}>
             <View style={{flexDirection:'row'}}>
               <Text style={{color:'white',fontSize:25,fontWeight:'500'}}>{total}/0</Text>
-              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>(0.{bowling.length}/1)</Text>
+              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>(0.{bowling.length-extraBall}/1)</Text>
             </View>
             <Text style={{color:'white',fontSize:10}}>{batFirst===0?myname.split("'")[0]+" won the toss and elected to bat":name.split("'")[0]+" won the toss and elected to bat"}</Text>
          </View>
@@ -394,7 +412,7 @@ const Main = () => {
             <Image style={{height:20,width:20,marginLeft:5}} source={require('../../../Assets/ball.png')} />
             <Text style={{color:'white',marginLeft:5}} >{batFirst===0?oppTeam[10].split('(')[0]:myTeam[10].split('(')[0]}</Text>
             <Image style={{height:20,width:20,marginLeft:5}} source={require('../../../Assets/wicket.png')} />
-            <Text style={{color:'white',marginLeft:"82%",position:'absolute'}} >{bowling.length}</Text>
+            <Text style={{color:'white',marginLeft:"82%",position:'absolute'}} >{bowling.length-extraBall}</Text>
           </View>
           <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{marginHorizontal:6,marginBottom:15}} horizontal={true}>
             {bowling.map((ele,ind)=>{
@@ -407,38 +425,38 @@ const Main = () => {
          </View>
          <View style={{height:'100%',width:'100%',backgroundColor:'white'}}>
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>score(0)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(0,1)} style={{borderWidth:0.3,height:90,width:131}}>
                 <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>0</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(1,1)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>1</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(2)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(2,1)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>2</Text>
               </TouchableOpacity>
               
            </View>
 
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>score(3)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(3,1)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>3</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(4)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(4,1)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>4</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(6)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(6,1)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>6</Text>
               </TouchableOpacity>
               
            </View>
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>WD</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>NB</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>BYE</Text>
               </TouchableOpacity>
               
