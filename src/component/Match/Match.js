@@ -4,6 +4,7 @@ import { firebase } from '@react-native-firebase/database';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import { style } from './style';
 
 
 const Match = () => {
@@ -83,15 +84,15 @@ useEffect(()=>{
 
   return (
     <>
-    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={{width:'100%',height:'7%',backgroundColor:'white'}}>
-        <Image style={{height:40,width:40,marginHorizontal:10,marginVertical:8}} source={require('../../Assets/previous.png')} />
+    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={style.mBox}>
+        <Image style={style.mprev} source={require('../../Assets/previous.png')} />
     </TouchableOpacity>
-    <Text style={{textAlign:'center',fontSize:25,fontWeight:'bold'}}>Select Team</Text>
+    <Text style={style.mheader}>Select Team</Text>
      {data.map((ele,ind)=>{
-      return <View key={ind} style={{flexDirection:'column',borderWidth:1,borderRadius:10,justifyContent:'center',alignItems:'center',marginTop:30,marginHorizontal:30}}>
-      <Text style={{fontSize:20,fontWeight:'bold'}} >{ele.name.split(' ')[0]}'s Team</Text>
-      <TouchableOpacity onPress={()=>setShow(true)} style={{backgroundColor:'#367545',marginVertical:10,borderRadius:10}} >
-            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:90}} >Show Team</Text>
+      return <View key={ind} style={style.mSubBox}>
+      <Text style={style.mteamText} >{ele.name.split(' ')[0]}'s Team</Text>
+      <TouchableOpacity onPress={()=>setShow(true)} style={style.mShow} >
+            <Text style={style.mBtnText} >Show Team</Text>
         </TouchableOpacity>
         <View pointerEvents={pointer}>
 
@@ -100,20 +101,20 @@ useEffect(()=>{
         onPress={()=>{
           navigation.navigate('CreateMatch',{name:ele.name,teams:ele.teams,uid:ele.uid,myname:myname})
         }}           
-        style={{backgroundColor:'#367545',marginVertical:10,borderRadius:10}} >
-            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:84}} >Create Match</Text>
+        style={style.mShow} >
+            <Text style={style.mmBtnText} >Create Match</Text>
         </TouchableOpacity>
         </View>
         <Modal visible={show}>
-    <View style={{flexDirection:'column',justifyContent:'center',alignItems:'center',marginTop:50}}>
+    <View style={style.modalDesign}>
         {ele.teams.map((ele,ind)=>{
-          return <Text key={ind} style={{fontSize:18,fontWeight:'bold'}}>{ele}</Text>
+          return <Text key={ind} style={style.team}>{ele}</Text>
         })}
            
         
         
-        <TouchableOpacity onPress={()=>setShow(false)} style={{backgroundColor:'#367545',marginVertical:20,borderRadius:10}} >
-            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:135}} >Close</Text>
+        <TouchableOpacity onPress={()=>setShow(false)} style={style.mbtn} >
+            <Text style={style.modalBtnText} >Close</Text>
         </TouchableOpacity>
     </View>
     </Modal>

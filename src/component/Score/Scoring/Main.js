@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { ImageBackground, Text, View,Image, TouchableOpacity,ScrollView, Alert } from 'react-native'
+import { ImageBackground, Text, View,Image, TouchableOpacity,ScrollView, Alert, Modal, TextInput } from 'react-native'
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -8,7 +8,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 const Main = () => {
+  const[ind,setInd]=useState(2)
   const navigation=useNavigation()
+  const [modText,setModText]=useState(0)
   const{name,city,date,time,ground,over,perbowler,status,uid,matchid,myTeam,oppTeam,batting}=useRoute().params
   const postData=(data,path)=>{
         database()
@@ -239,21 +241,29 @@ const Main = () => {
     // console.log(data)
     // return data;
   }
+
+  const [strikerOne,setStrikerOne]=useState(batFirst===0?myTeam[0].split('(')[0]:oppTeam[0].split('(')[0]);
+  const [strikerTwo,setStrikerTwo]=useState(batFirst===0?myTeam[1].split('(')[0]:oppTeam[1].split('(')[0])
   const[extraBall,setExtraBall]=useState(0)
   const score=async(val,ballCount)=>{
     setBowling([...bowling,val])
     if(ballCount===0) setExtraBall(extraBall+1)
     if(val%2===0){
       if(striker===0){
-        
-        if(ballCount!==0){
+        if(val===0 && ballCount===0){
+
+        }
+        else if(ballCount!==0){
           setFirstScorer(firstScorer+val)
           setFirstScorerBall(firstScorerBall+1)
           setStriker(0)
         }
        
       }else{
-        if(ballCount!==0){
+        if(val===0 && ballCount===0){
+
+        }
+        else if(ballCount!==0){
           setSecondScorer(secondScorer+val)
           setSecondScorerBall(secondScorerBall+1)
           setStriker(1)
@@ -292,7 +302,7 @@ const Main = () => {
             navigation.navigate("Dashboard")
           }
           
-        }else if(bowling.length===5){
+        }else if(bowling.length-extraBall===5){
            if(inning1Score>(total+val)){
             if(batFirst===0){
               Alert.alert(myname)
@@ -306,20 +316,64 @@ const Main = () => {
             navigation.navigate("Dashboard")
           }
         }
-        
       }
+      
      })
     
       
     }
     
   }
+
+ 
+  const handleWide=()=>{
+    setModal(true)
+  }
+ const[byeActive,setByeActive]=useState(false)
+  const handleBye=()=>{
+    setByeActive(true)
+    setModal(true)
+  }
+  const [noBallCount,setNoBallCount]=useState(0)
+  const[modal,setModal]=useState(false)
+  const handleNoBall=()=>{
+    
+    if(noBallCount+1>2){
+      const noball="Dead ball"
+      Alert.alert(noball)
+    }else{
+      setModal(true)
+      
+    }
+    setNoBallCount(noBallCount+1)
+  }
+  
+  const handleModal=()=>{
+    console.log(modText)
+
+    
+    if(modText<=6){
+      if(byeActive){
+        score((parseInt(modText)),1)
+        setByeActive(false)
+      }else{
+        score((1+parseInt(modText)),0)
+      }
+      
+      setModal(false);
+    }else{
+      Alert.alert("Enter number less than equal to 6")
+    }
+    
+  }
   useEffect(()=>{
     inning()
   },[bowling])
+
+  
   
   const inning=()=>{
-    if(bowling.length===6){
+    if(bowling.length-extraBall===6){
       const data = {
         name: teamName,
         total:total,
@@ -335,10 +389,7 @@ const Main = () => {
           AsyncStorage.setItem('inning1', JSON.stringify(data));
         }else{
           AsyncStorage.setItem('inning2', JSON.stringify(data));
-          
-          const total1=getDatafromAsync("inning1")
-          
-          const total2=getDatafromAsync("inning2")
+
         }
         
 
@@ -351,6 +402,7 @@ const Main = () => {
           setFirstScorerBall(0)
           setSecondScorerBall(0)
           setExtraBall(0)
+          setNoBallCount(0)
         if(batFirst===0){
           setTeamName(`${name.split(' ')[0]}'s team`)
           
@@ -372,6 +424,75 @@ const Main = () => {
       inning2()
     }
   }
+  useEffect(()=>{
+
+  },[handleOut])
+  const handleOut=()=>{
+    if(ind===11){
+      
+      const data = {
+        name: teamName,
+        total:total,
+        batsman1:batFirst===0?myTeam[0]:oppTeam[0],
+        batsman2:batFirst===0?myTeam[1]:oppTeam[1],
+        batsman1Score:firstScorer,
+        batsman2Score:secondScorer,
+        oppBowler:batFirst===0?oppTeam[10].split('(')[0]:myTeam[10].split('(')[0]
+        
+      };
+      try{
+        if(inningCount==0){
+          AsyncStorage.setItem('inning1', JSON.stringify(data));
+        }else{
+          AsyncStorage.setItem('inning2', JSON.stringify(data));
+
+        }
+        
+
+        //update details
+        setStrikerOne(batFirst===0?myTeam[0].split('(')[0]:oppTeam[0].split('(')[0])
+        setStrikerTwo(batFirst===0?myTeam[1].split('(')[0]:oppTeam[1].split('(')[0])
+          setTotalScore(0)
+          setBowling([])
+          setStriker(0)
+          setFirstScorer(0)
+          setSecondScorer(0)
+          setFirstScorerBall(0)
+          setSecondScorerBall(0)
+          setExtraBall(0)
+          setNoBallCount(0)
+          setInd(2)
+        if(batFirst===0){
+          setTeamName(`${name.split(' ')[0]}'s team`)
+          
+        }else{
+          setTeamName(`${myname.split(' ')[0]}'s team`)
+        }
+        //update details
+        console.log("Insertion success")
+      }catch{
+        Alert.alert("Insertion error")
+      }
+      setInningCount(1)
+      Alert.alert("Change in the innings")
+      
+    }
+    else if(striker===0){
+      setStrikerOne(batFirst===0?myTeam[ind].split('(')[0]:oppTeam[ind].split('(')[0])
+      setFirstScorer(0)
+      setFirstScorerBall(0)
+      setInd(ind+1)
+      score(0,0)
+    }else{
+      setStrikerTwo(batFirst===0?myTeam[ind].split('(')[0]:oppTeam[ind].split('(')[0])
+      setSecondScorer(0)
+      setSecondScorerBall(0)
+      setInd(ind+1)
+      score(0,0)
+    }
+
+    
+  }
   const inning1=()=>{
 
   }
@@ -381,7 +502,14 @@ const Main = () => {
 
   return (
     <View >
-    
+    <Modal visible={modal}>
+      <View style={{flexDirection:'column',justifyContent:'center',alignItems:'center',marginTop:100}}>
+       <TextInput  keyboardType="numeric" onChangeText={(text)=>setModText(text.trim())} style={{borderWidth:1,width:"70%"}} placeholder='Enter Run' />
+       <TouchableOpacity onPress={handleModal} style={{backgroundColor:'#367545',marginVertical:10,borderRadius:10}} >
+            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:108}} >Submit</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
     <Image style={{width:'100%',height:"80%",objectFit:"fill",position:'absolute'}} source={require('../../../Assets/st.jpg')}  />
     
     <View style={{width:'100%',height:"80%",backgroundColor:"black",opacity:0.7,position:'relative'}} />
@@ -394,17 +522,17 @@ const Main = () => {
          </View>
          <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center',marginHorizontal:78,marginTop:160}}>
             <View style={{flexDirection:'row'}}>
-              <Text style={{color:'white',fontSize:25,fontWeight:'500'}}>{total}/0</Text>
+              <Text style={{color:'white',fontSize:25,fontWeight:'500'}}>{total}/{ind-2}</Text>
               <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>(0.{bowling.length-extraBall}/1)</Text>
             </View>
             <Text style={{color:'white',fontSize:10}}>{batFirst===0?myname.split("'")[0]+" won the toss and elected to bat":name.split("'")[0]+" won the toss and elected to bat"}</Text>
          </View>
          <View style={{flexDirection:'row',marginTop:140}}>
             <View style={{borderWidth:0.5,borderColor:'lightgrey',width:"50%"}}>
-              <Text style={{color:striker==0?"green":'white',fontSize:15,fontWeight:'bold',marginVertical:8,marginHorizontal:6}} >{batFirst===0?myTeam[0].split('(')[0]:oppTeam[0].split('(')[0]} {firstScorer}({firstScorerBall})</Text>
+              <Text style={{color:striker==0?"green":'white',fontSize:15,fontWeight:'bold',marginVertical:8,marginHorizontal:6}} >{strikerOne} {firstScorer}({firstScorerBall})</Text>
             </View>
             <View style={{borderWidth:0.5,borderColor:'lightgrey',width:"50%"}}>
-              <Text style={{color:striker==1?"green":'white',fontSize:15,fontWeight:'bold',marginVertical:8,marginHorizontal:6}} >{batFirst===0?myTeam[1].split('(')[0]:oppTeam[1].split('(')[0]} {secondScorer}({secondScorerBall})</Text>
+              <Text style={{color:striker==1?"green":'white',fontSize:15,fontWeight:'bold',marginVertical:8,marginHorizontal:6}} >{strikerTwo} {secondScorer}({secondScorerBall})</Text>
             </View>
          </View>
          <View style={{backgroundColor:'#343d40'}}>
@@ -450,24 +578,22 @@ const Main = () => {
               
            </View>
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={handleWide} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>WD</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={handleNoBall} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>NB</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(1,0)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={handleBye} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>BYE</Text>
               </TouchableOpacity>
               
            </View>
-           <TouchableOpacity style={{backgroundColor:'#ad3a23',height:'100%'}}>
+           <TouchableOpacity onPress={handleOut} style={{backgroundColor:'#ad3a23',height:'100%'}}>
             <Text style={{textAlign:'center',fontSize:25,fontWeight:'bold',color:'white',marginVertical:10}}>OUT</Text>
            </TouchableOpacity>
          </View>
-         
       </View>
-      
     </View>
   )
 }

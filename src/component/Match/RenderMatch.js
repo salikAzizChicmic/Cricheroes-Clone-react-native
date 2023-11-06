@@ -4,6 +4,7 @@ import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import ViewMatchList from './ViewMatchList';
 import { useNavigation } from '@react-navigation/native';
+import { style } from './style';
 
 const RenderMatch = () => {
     const[alldata,setAlldata]=useState([])
@@ -44,11 +45,11 @@ const RenderMatch = () => {
         getData()
     },[])
   return (
-    <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center'}}>
-    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={{width:'100%',height:60,backgroundColor:'white'}}>
-        <Image style={{height:40,width:40,marginHorizontal:10,marginVertical:5}} source={require('../../Assets/previous.png')} />
+    <View style={style.rbox}>
+    <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} style={style.rprev}>
+        <Image style={style.rImg} source={require('../../Assets/previous.png')} />
     </TouchableOpacity>
-        <Text style={{fontSize:25,fontWeight:'bold',marginTop:20}}>Match Details</Text>
+        <Text style={style.rdetails}>Match Details</Text>
         <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {alldata.map((ele,ind)=>
                         {

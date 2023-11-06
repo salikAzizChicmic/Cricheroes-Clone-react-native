@@ -85,23 +85,23 @@ const Dashboard = () => {
          return <UserPost uid={ele.uid} pid={ele.pid} name={ele.name} des={ele.des} image={ele.img} key={ind} />
         })}
       </ScrollView>  
-        <View style={{flexDirection:'row',justifyContent:'space-around',width:'100%',height:'105%',position:'absolute',backgroundColor:'white',marginTop:"192.2%"}}>
+        <View style={style.subbox}>
             <TouchableOpacity onPress={()=>navigation.navigate("RenderMatch")} >
-              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/detail.png')} />
-              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Match\nDetails`}</Text>
+              <Image style={style.subImg} source={require('../../Assets/detail.png')} />
+              <Text style={style.subText}>{`Match\nDetails`}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>navigation.navigate("CreatePost")} >
-              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/edit.png')} />
-              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Create\nPost`}</Text>
+              <Image style={style.subImg} source={require('../../Assets/edit.png')} />
+              <Text style={style.subText}>{`Create\nPost`}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/post.png')} />
-              <Text style={{fontSize:10,fontWeight:'bold'}}>{`My\nPosts`}</Text>
+              <Image style={style.subImg} source={require('../../Assets/post.png')} />
+              <Text style={style.subText}>{`My\nPosts`}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>navigation.navigate("Main")}>
-              <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/notification.png')} />
-              <Text style={{fontSize:10,fontWeight:'bold'}}>{`Notify\nDetails`}</Text>
+              <Image style={style.subImg} source={require('../../Assets/notification.png')} />
+              <Text style={style.subText}>{`Notify\nDetails`}</Text>
             </TouchableOpacity>
         </View>
     </View>

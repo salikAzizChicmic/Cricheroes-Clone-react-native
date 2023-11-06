@@ -7,6 +7,7 @@ import Match from './Match';
 import { firebase } from '@react-native-firebase/database';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import { style } from './style';
 
 
 const CreateMatch = () => {
@@ -156,14 +157,14 @@ const CreateMatch = () => {
    }
   
   return (
-    <View style={{flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-    <TouchableOpacity onPress={()=>navigation.navigate("Match")} style={{width:'100%',height:'8%',backgroundColor:'white'}}>
-        <Image style={{height:40,width:40,marginHorizontal:10,marginVertical:5}} source={require('../../Assets/previous.png')} />
+    <View style={style.cbox}>
+    <TouchableOpacity onPress={()=>navigation.navigate("Match")} style={style.cprev}>
+        <Image style={style.cImg} source={require('../../Assets/previous.png')} />
     </TouchableOpacity>
-        <Text style={{fontSize:25,fontWeight:'bold',color:'black',marginTop:20}}>Match Configuration</Text>
-        <View style={{flexDirection:'row',marginHorizontal:5,marginTop:10}}>
-            <Text style={{fontSize:20,fontWeight:'bold',marginVertical:10,marginRight:4}} >Match Type</Text>
-            <View style={{width:'60%'}}>
+        <Text style={style.cheading}>Match Configuration</Text>
+        <View style={style.cmatchType}>
+            <Text style={style.cmatchHeading} >Match Type</Text>
+            <View style={style.cdropdown}>
             <DropDownPicker
                 open={open}
                 value={value}
@@ -176,17 +177,17 @@ const CreateMatch = () => {
             
         </View>
 
-        <View style={{flexDirection:'row',marginHorizontal:5,marginTop:40}}>
-            <Text style={{fontSize:20,fontWeight:'bold',marginVertical:10,marginRight:69}} >City</Text>
-            <View style={{width:'60%'}}>
-                <TextInput onChangeText={(text)=>setCity(text.trim())} style={{borderWidth:1,borderRadius:10}} placeholder='City'/>
+        <View style={style.cInpDesign}>
+            <Text style={style.cplaceholder} >City</Text>
+            <View style={style.inpBox}>
+                <TextInput onChangeText={(text)=>setCity(text.trim())} style={style.ctxtInput} placeholder='City'/>
             </View>
             
         </View>
 
-        <View style={{flexDirection:'row',marginHorizontal:5,marginTop:40}}>
+        <View style={style.cInpDesign}>
             <Text style={{fontSize:20,fontWeight:'bold',marginVertical:10,marginRight:4}} >Over/Bowler</Text>
-            <View style={{width:'60%'}}>
+            <View style={style.inpBox}>
             <DropDownPicker
                 open={open1}
                 value={value1}
@@ -199,13 +200,13 @@ const CreateMatch = () => {
             
         </View>
 
-        <View style={{flexDirection:'row',marginHorizontal:5,marginVertical:40}}>
-        <Text style={{fontSize:20,fontWeight:'bold',marginVertical:10,marginRight:14}} >Date/Time</Text>
-            <TouchableOpacity style={{borderWidth:1,borderRadius:10,width:'60%'}} onPress={showDatePicker}>
-            <View style={{flexDirection:'row'}}>
-                <Image style={{height:30,width:30,marginVertical:10,marginHorizontal:5}} source={require('../../Assets/calendar.png')} />
-                <Text style={{marginVertical:14,marginHorizontal:5}}>{mdate}</Text>
-                <Text style={{marginVertical:14,marginHorizontal:2}}>{`${mtime!==""?", Time :"+mtime:""}`}</Text>
+        <View style={style.cInpDesign}>
+        <Text style={style.chead} >Date/Time</Text>
+            <TouchableOpacity style={style.cborder} onPress={showDatePicker}>
+            <View style={style.time}>
+                <Image style={style.timeImg} source={require('../../Assets/calendar.png')} />
+                <Text style={style.cdate}>{mdate}</Text>
+                <Text style={style.ctime}>{`${mtime!==""?", Time :"+mtime:""}`}</Text>
             </View>    
             </TouchableOpacity>
 
@@ -222,9 +223,9 @@ const CreateMatch = () => {
         
         
 
-        <View style={{flexDirection:'row',marginHorizontal:5,marginTop:10}}>
-            <Text style={{fontSize:20,fontWeight:'bold',marginVertical:10,marginRight:45}} >Ground</Text>
-            <View style={{width:'60%'}}>
+        <View style={style.cmatchType}>
+            <Text style={style.cgrndText} >Ground</Text>
+            <View style={style.inpBox}>
             <DropDownPicker
                 open={open2}
                 value={value2}
@@ -236,8 +237,8 @@ const CreateMatch = () => {
             </View>
             
         </View>
-       <TouchableOpacity onPress={handleSubmit} style={{backgroundColor:'#367545',marginVertical:20,borderRadius:10}} >
-            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,paddingHorizontal:135}} >Schedule</Text>
+       <TouchableOpacity onPress={handleSubmit} style={style.cBtnDesign} >
+            <Text style={style.scheduleText} >Schedule</Text>
         </TouchableOpacity>
     </View>
   )
