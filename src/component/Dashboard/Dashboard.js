@@ -99,7 +99,7 @@ const Dashboard = () => {
               <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/post.png')} />
               <Text style={{fontSize:10,fontWeight:'bold'}}>{`My\nPosts`}</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>navigation.navigate("Main")}>
               <Image style={{height:30,width:30,marginTop:4}} source={require('../../Assets/notification.png')} />
               <Text style={{fontSize:10,fontWeight:'bold'}}>{`Notify\nDetails`}</Text>
             </TouchableOpacity>

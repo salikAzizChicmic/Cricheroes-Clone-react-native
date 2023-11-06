@@ -8,6 +8,7 @@ import { firebase } from '@react-native-firebase/database';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 
+
 const CreateMatch = () => {
     
     const {name,teams,uid,myname}=useRoute().params;
@@ -16,6 +17,13 @@ const CreateMatch = () => {
     const [mili,setMili]=useState(0)
     const [mdate,setMdate]=useState("");
     const [mtime,setMtime]=useState("")
+
+    //uuid
+    const getUuids = () => {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+      }
     //Match type
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -100,9 +108,9 @@ const CreateMatch = () => {
     }
     console.log(obj)
     
-
+    const uuid=getUuids()+getUuids()
     // save at sender end
-    const path1='/user/'+auth().currentUser.uid+"/match/"+uid
+    const path1='/user/'+auth().currentUser.uid+"/match/"+uuid
     
     database()
     .ref(path1)
@@ -119,7 +127,7 @@ const CreateMatch = () => {
         console.log('Data set at sender end')
         // save at receiver end
 
-    const path2='/user/'+uid+"/match/"+auth().currentUser.uid
+    const path2='/user/'+uid+"/match/"+uuid
     
     database()
     .ref(path2)

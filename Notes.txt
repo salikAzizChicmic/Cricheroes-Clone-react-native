@@ -1,0 +1,1 @@
+Working on cricheroes clone, Done with initial layout design of scoring page and handled all initial data for starting the scoring (like match id ,user id,team ,playing 11, striker non striker, cur bowler).
