@@ -8,7 +8,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 const Main = () => {
+  const[summaryBatting,setSummaryBatting]=useState([])
+  const[summaryBowling,setSummaryBowling]=useState([])
+  const[allSummaryData,setAllSummaryData]=useState([])
   const[ind,setInd]=useState(2)
+  const[bind,setBind]=useState(9)
   const navigation=useNavigation()
   const [modText,setModText]=useState(0)
   const{name,city,date,time,ground,over,perbowler,status,uid,matchid,myTeam,oppTeam,batting}=useRoute().params
@@ -245,15 +249,48 @@ const Main = () => {
   const [strikerOne,setStrikerOne]=useState(batFirst===0?myTeam[0].split('(')[0]:oppTeam[0].split('(')[0]);
   const [strikerTwo,setStrikerTwo]=useState(batFirst===0?myTeam[1].split('(')[0]:oppTeam[1].split('(')[0])
   const[extraBall,setExtraBall]=useState(0)
-  const score=async(val,ballCount)=>{
-    setBowling([...bowling,val])
+  const score=async(val,ballCount,tag)=>{
+    setBowling([...bowling,{val:val,tag:tag}])
     if(ballCount===0) setExtraBall(extraBall+1)
-    if(val%2===0){
-      if(striker===0){
-        if(val===0 && ballCount===0){
-
+    if((bowling.length+1-extraBall)%6===0){
+      if(val%2===0){
+        if(striker===0){
+          if(ballCount!==0){
+            setFirstScorer(firstScorer+val)
+            setFirstScorerBall(firstScorerBall+1)
+            setStriker(1)
+          }
+         
+        }else{
+          if(val===0 && ballCount===0){
+  
+          }
+          else if(ballCount!==0){
+            setSecondScorer(secondScorer+val)
+            setSecondScorerBall(secondScorerBall+1)
+            setStriker(0)
+          }
         }
-        else if(ballCount!==0){
+      }else{
+        if(striker===1){
+          if(ballCount!==0){
+            setSecondScorer(secondScorer+val)
+          setSecondScorerBall(secondScorerBall+1)
+          setStriker(1)
+          }
+        }else{
+          if(ballCount!==0){
+            setFirstScorer(firstScorer+val)
+          setFirstScorerBall(firstScorerBall+1)
+          setStriker(0)
+          }
+        }
+      }
+      //end
+    }
+    else if(val%2===0){
+      if(striker===0){
+        if(ballCount!==0){
           setFirstScorer(firstScorer+val)
           setFirstScorerBall(firstScorerBall+1)
           setStriker(0)
@@ -294,26 +331,33 @@ const Main = () => {
         console.log(inning1Score)
   
         if((total+val)>inning1Score ){
+          
+          console.log(allSummaryData)
+      
           if(batFirst===0){
             Alert.alert(name)
-            navigation.navigate("Dashboard")
+            navigation.navigate("Dashboard",{alldata:allSummaryData})
           }else{
             Alert.alert(myname)
-            navigation.navigate("Dashboard")
+            navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
           
-        }else if(bowling.length-extraBall===5){
+        }else if(bowling.length-extraBall===23){
+          
+        
            if(inning1Score>(total+val)){
             if(batFirst===0){
               Alert.alert(myname)
-              navigation.navigate("Dashboard")
+              navigation.navigate("Dashboard",{alldata:allSummaryData})
             }else{
               Alert.alert(name)
-              navigation.navigate("Dashboard")
+              navigation.navigate("Dashboard",{alldata:allSummaryData})
             }
           }else{
+            
+    
             Alert.alert("Draw")
-            navigation.navigate("Dashboard")
+            navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
         }
       }
@@ -325,8 +369,9 @@ const Main = () => {
     
   }
 
- 
+  const[wideActive,setWideActive]=useState(false)
   const handleWide=()=>{
+    setWideActive(true)
     setModal(true)
   }
  const[byeActive,setByeActive]=useState(false)
@@ -336,12 +381,14 @@ const Main = () => {
   }
   const [noBallCount,setNoBallCount]=useState(0)
   const[modal,setModal]=useState(false)
+  const [noBallActive,setNoBallActive]=useState(false)
   const handleNoBall=()=>{
     
     if(noBallCount+1>2){
       const noball="Dead ball"
       Alert.alert(noball)
     }else{
+      setNoBallActive(true)
       setModal(true)
       
     }
@@ -354,10 +401,17 @@ const Main = () => {
     
     if(modText<=6){
       if(byeActive){
-        score((parseInt(modText)),1)
+        score((parseInt(modText)),1,"bye")
         setByeActive(false)
-      }else{
-        score((1+parseInt(modText)),0)
+      }else if(noBallActive){
+        score((1+parseInt(modText)),0,"no")
+      }
+      else if(wideActive){
+        score((parseInt(modText)),0,"wide")
+        setWideActive(false)
+      }
+      else{
+        score((1+parseInt(modText)),0,"")
       }
       
       setModal(false);
@@ -370,10 +424,65 @@ const Main = () => {
     inning()
   },[bowling])
 
-  
+  const [bowlerName,setBowlerName]=useState(batFirst===0?oppTeam[10].split('(')[0]:myTeam[10].split('(')[0])
   
   const inning=()=>{
-    if(bowling.length-extraBall===6){
+    let bowlingData={}
+    let bowlingData1={}
+ 
+    if(bowling.length>0 && (bowling.length-extraBall)%6===0){
+      
+      bowlingData={
+        name:bowlerName,
+        overs:1,
+        wicketcount:wicketCount,
+        run:total
+      }
+      
+      setWicketCount(0)
+      setSummaryBowling([...summaryBowling,bowlingData])
+      if(inningCount==0){
+        setBowlerName(batFirst===0?oppTeam[bind]:myTeam[bind])
+        setBind(bind-1)
+      }else{
+        setBowlerName(batFirst===0?myTeam[bind]:oppTeam[bind])
+        setBind(bind-1)
+      }
+    }
+  
+    if(bowling.length-extraBall===24){
+      
+      bowlingData1={
+        name:bowlerName,
+        overs:1,
+        wicketcount:wicketCount,
+        run:total-summaryBowling[0].run
+      }
+      setSummaryBowling([...summaryBowling,bowlingData1]) 
+      console.log([...summaryBowling,bowlingData1])
+      setWicketCount(0)
+      const battingData={
+        name:strikerOne,
+        outby:"Not Out",
+        run: firstScorer,
+        bowlcount:firstScorerBall
+      }
+      const battingData1={
+        name:strikerTwo,
+        outby:"Not Out",
+        run: secondScorer,
+        bowlcount:secondScorerBall
+      }
+      setSummaryBatting([...summaryBatting,battingData,battingData1])
+   
+      console.log([...summaryBatting,battingData,battingData1])
+       console.log([...allSummaryData,[{team:teamName,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData,bowlingData1]}]])
+      
+      setAllSummaryData([...allSummaryData,[{team:teamName,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData,bowlingData1]}]])
+      
+
+      setSummaryBatting([])
+      setSummaryBowling([])
       const data = {
         name: teamName,
         total:total,
@@ -403,6 +512,8 @@ const Main = () => {
           setSecondScorerBall(0)
           setExtraBall(0)
           setNoBallCount(0)
+          setStrikerOne(batFirst===0?oppTeam[0].split('(')[0]:myTeam[0].split('(')[0])
+          setStrikerTwo(batFirst===0?oppTeam[1].split('(')[0]:myTeam[1].split('(')[0])
         if(batFirst===0){
           setTeamName(`${name.split(' ')[0]}'s team`)
           
@@ -414,7 +525,11 @@ const Main = () => {
       }catch{
         Alert.alert("Insertion error")
       }
+      setBowlerName(batFirst===0?myTeam[10].split('(')[0]:oppTeam[10].split('(')[0])
       setInningCount(1)
+      setInd(2)
+      setBind(9)
+      
       Alert.alert("Change in the innings")
     }
    
@@ -427,7 +542,19 @@ const Main = () => {
   useEffect(()=>{
 
   },[handleOut])
+  const[wicketCount,setWicketCount]=useState(0)
   const handleOut=()=>{
+    setWicketCount(wicketCount+1)
+    const battingData={
+      name:striker===0?strikerOne:strikerTwo,
+      outby:bowlerName,
+      run: striker===0?firstScorer:secondScorer,
+      bowlcount: striker===0?firstScorerBall:secondScorerBall
+    }
+
+    setSummaryBatting([...summaryBatting,battingData])
+   
+     
     if(ind===11){
       
       const data = {
@@ -461,10 +588,10 @@ const Main = () => {
           setSecondScorerBall(0)
           setExtraBall(0)
           setNoBallCount(0)
+          setBind(9)
           setInd(2)
         if(batFirst===0){
           setTeamName(`${name.split(' ')[0]}'s team`)
-          
         }else{
           setTeamName(`${myname.split(' ')[0]}'s team`)
         }
@@ -474,6 +601,14 @@ const Main = () => {
         Alert.alert("Insertion error")
       }
       setInningCount(1)
+      if(inningCount==0){
+        setBowlerName(batFirst===0?oppTeam[bind]:myTeam[bind])
+        setBind(bind-1)
+      }else{
+        setBowlerName(batFirst===0?myTeam[bind]:oppTeam[bind])
+        setBind(bind-1)
+      }
+      
       Alert.alert("Change in the innings")
       
     }
@@ -482,13 +617,13 @@ const Main = () => {
       setFirstScorer(0)
       setFirstScorerBall(0)
       setInd(ind+1)
-      score(0,0)
+      score(0,1,"out")
     }else{
       setStrikerTwo(batFirst===0?myTeam[ind].split('(')[0]:oppTeam[ind].split('(')[0])
       setSecondScorer(0)
       setSecondScorerBall(0)
       setInd(ind+1)
-      score(0,0)
+      score(0,1,"out")
     }
 
     
@@ -523,7 +658,7 @@ const Main = () => {
          <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center',marginHorizontal:78,marginTop:160}}>
             <View style={{flexDirection:'row'}}>
               <Text style={{color:'white',fontSize:25,fontWeight:'500'}}>{total}/{ind-2}</Text>
-              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>(0.{bowling.length-extraBall}/1)</Text>
+              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>({parseInt((bowling.length-extraBall)/6)}.{(bowling.length-extraBall)%6?(bowling.length-extraBall)%6:0}/2)</Text>
             </View>
             <Text style={{color:'white',fontSize:10}}>{batFirst===0?myname.split("'")[0]+" won the toss and elected to bat":name.split("'")[0]+" won the toss and elected to bat"}</Text>
          </View>
@@ -538,41 +673,44 @@ const Main = () => {
          <View style={{backgroundColor:'#343d40'}}>
           <View style={{flexDirection:'row',marginTop:7,marginBottom:7}}>
             <Image style={{height:20,width:20,marginLeft:5}} source={require('../../../Assets/ball.png')} />
-            <Text style={{color:'white',marginLeft:5}} >{batFirst===0?oppTeam[10].split('(')[0]:myTeam[10].split('(')[0]}</Text>
+            <Text style={{color:'white',marginLeft:5}} >{bowlerName}</Text>
             <Image style={{height:20,width:20,marginLeft:5}} source={require('../../../Assets/wicket.png')} />
             <Text style={{color:'white',marginLeft:"82%",position:'absolute'}} >{bowling.length-extraBall}</Text>
           </View>
           <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{marginHorizontal:6,marginBottom:15}} horizontal={true}>
             {bowling.map((ele,ind)=>{
               return  <View key={ind} style={{backgroundColor:'white',borderRadius:20,marginHorizontal:4}}>
-              <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>{ele}</Text>
+              {ele.tag==="" && <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>{ele.val}</Text>}
+              {ele.tag==="no" && <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>N{ele.val}</Text>}
+              {ele.tag==="bye" && <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>B{ele.val}</Text>}
+              {ele.tag==="out" && <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>W</Text>}
+              {ele.tag==="wide" && <Text style={{fontWeight:'bold',textAlign:'center',marginHorizontal:10,marginVertical:5}}>WD{ele.val}</Text>}
             </View>
             })}
-            
           </ScrollView>
          </View>
          <View style={{height:'100%',width:'100%',backgroundColor:'white'}}>
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>score(0,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(0,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
                 <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>0</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(1,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(1,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>1</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(2,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(2,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>2</Text>
               </TouchableOpacity>
               
            </View>
 
            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>score(3,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(3,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>3</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(4,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(4,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>4</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>score(6,1)} style={{borderWidth:0.3,height:90,width:131}}>
+              <TouchableOpacity onPress={()=>score(6,1,"")} style={{borderWidth:0.3,height:90,width:131}}>
               <Text style={{textAlign:'center',marginVertical:"25%",fontSize:15}}>6</Text>
               </TouchableOpacity>
               

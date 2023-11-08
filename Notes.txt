@@ -1,1 +1,0 @@
-Working on scoring module of cricheroes , implemented -: Ball by ball live scoring , current bowler , wide ball / No ball / Bye  functionality, Out feature ,all out(changing complete inning based on this)  

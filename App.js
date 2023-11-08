@@ -16,6 +16,7 @@ import RenderMatch from './src/component/Match/RenderMatch';
 import CreatePost from './src/component/Post/CreatePost';
 import Toss from './src/component/Score/Toss/Toss';
 import Main from './src/component/Score/Scoring/Main';
+import Scorecard from './src/component/Scorecard/Scorecard';
 
 const Stack= createNativeStackNavigator();
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen name='Toss' component={Toss} />
         <Stack.Screen name='Main' component={Main} />
+        <Stack.Screen name='Scorecard' component={Scorecard} />
          <Stack.Screen name='Dashboard' component={Dashboard} />
       </Stack.Navigator>
     </NavigationContainer>
