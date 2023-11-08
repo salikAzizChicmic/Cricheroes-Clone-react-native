@@ -6,8 +6,9 @@ import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-
+var prev=0;
 const Main = () => {
+  const[viewScore,setViewScrore]=useState(false)
   const[summaryBatting,setSummaryBatting]=useState([])
   const[summaryBowling,setSummaryBowling]=useState([])
   const[allSummaryData,setAllSummaryData]=useState([])
@@ -253,6 +254,7 @@ const Main = () => {
     setBowling([...bowling,{val:val,tag:tag}])
     if(ballCount===0) setExtraBall(extraBall+1)
     if((bowling.length+1-extraBall)%6===0){
+      
       if(val%2===0){
         if(striker===0){
           if(ballCount!==0){
@@ -321,7 +323,7 @@ const Main = () => {
         }
       }
     }
-    
+  
     setTotalScore(total+val)
 
     if(inningCount===1){
@@ -331,32 +333,121 @@ const Main = () => {
         console.log(inning1Score)
   
         if((total+val)>inning1Score ){
-          
-          console.log(allSummaryData)
+          const bowlingData1={
+            name:bowlerName,
+            overs:1,
+            wicketcount:wicketCount,
+            run:total-prev
+          }
+          setSummaryBowling([...summaryBowling,bowlingData1]) 
+          prev=total
+          console.log([...summaryBowling,bowlingData1])
+          setWicketCount(0)
+
+          const battingData={
+            name:strikerOne,
+            outby:"Not Out",
+            run: firstScorer,
+            bowlcount:firstScorerBall
+          }
+          const battingData1={
+            name:strikerTwo,
+            outby:"Not Out",
+            run: secondScorer,
+            bowlcount:secondScorerBall
+          }
+          setSummaryBatting([...summaryBatting,battingData,battingData1])
+          console.log([...summaryBatting,battingData,battingData1])
+          setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+          setSummaryBowling([])
+          setSummaryBatting([])
+          console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
       
           if(batFirst===0){
-            Alert.alert(name)
+            Alert.alert(`${name} win`)
+            //setViewScrore(true)
             navigation.navigate("Dashboard",{alldata:allSummaryData})
           }else{
-            Alert.alert(myname)
+            Alert.alert(`${myname} win`)
+            //setViewScrore(true)
             navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
           
         }else if(bowling.length-extraBall===23){
           
+          const bowlingData1={
+            name:bowlerName,
+            overs:1,
+            wicketcount:wicketCount,
+            run:total-prev
+          }
+          setSummaryBowling([...summaryBowling,bowlingData1]) 
+          prev=total
+          console.log([...summaryBowling,bowlingData1])
+          setWicketCount(0)
+
+          const battingData={
+            name:strikerOne,
+            outby:"Not Out",
+            run: firstScorer,
+            bowlcount:firstScorerBall
+          }
+          const battingData1={
+            name:strikerTwo,
+            outby:"Not Out",
+            run: secondScorer,
+            bowlcount:secondScorerBall
+          }
+          setSummaryBatting([...summaryBatting,battingData,battingData1])
+          console.log([...summaryBatting,battingData,battingData1])
+          setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+          setSummaryBowling([])
+          setSummaryBatting([])
+          console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
         
            if(inning1Score>(total+val)){
             if(batFirst===0){
-              Alert.alert(myname)
+              Alert.alert(`${myname} win`)
+              //setViewScrore(true)
               navigation.navigate("Dashboard",{alldata:allSummaryData})
             }else{
-              Alert.alert(name)
+              Alert.alert(`${name} win`)
+              //setViewScrore(true)
               navigation.navigate("Dashboard",{alldata:allSummaryData})
             }
           }else{
-            
+            const bowlingData1={
+              name:bowlerName,
+              overs:1,
+              wicketcount:wicketCount,
+              run:total-prev
+            }
+            setSummaryBowling([...summaryBowling,bowlingData1]) 
+            prev=total
+            console.log([...summaryBowling,bowlingData1])
+            setWicketCount(0)
+  
+            const battingData={
+              name:strikerOne,
+              outby:"Not Out",
+              run: firstScorer,
+              bowlcount:firstScorerBall
+            }
+            const battingData1={
+              name:strikerTwo,
+              outby:"Not Out",
+              run: secondScorer,
+              bowlcount:secondScorerBall
+            }
+            setSummaryBatting([...summaryBatting,battingData,battingData1])
+            console.log([...summaryBatting,battingData,battingData1])
+            setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+            setSummaryBowling([])
+            setSummaryBatting([])
+            console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
     
             Alert.alert("Draw")
+            //setViewScrore(true)
             navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
         }
@@ -436,11 +527,13 @@ const Main = () => {
         name:bowlerName,
         overs:1,
         wicketcount:wicketCount,
-        run:total
+        run:total-prev
       }
       
       setWicketCount(0)
       setSummaryBowling([...summaryBowling,bowlingData])
+      prev=total
+      console.log([...summaryBowling,bowlingData])
       if(inningCount==0){
         setBowlerName(batFirst===0?oppTeam[bind]:myTeam[bind])
         setBind(bind-1)
@@ -451,14 +544,15 @@ const Main = () => {
     }
   
     if(bowling.length-extraBall===24){
-      
+
       bowlingData1={
         name:bowlerName,
         overs:1,
         wicketcount:wicketCount,
-        run:total-summaryBowling[0].run
+        run:total-prev
       }
       setSummaryBowling([...summaryBowling,bowlingData1]) 
+      prev=total
       console.log([...summaryBowling,bowlingData1])
       setWicketCount(0)
       const battingData={
@@ -475,10 +569,10 @@ const Main = () => {
       }
       setSummaryBatting([...summaryBatting,battingData,battingData1])
    
-      console.log([...summaryBatting,battingData,battingData1])
-       console.log([...allSummaryData,[{team:teamName,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData,bowlingData1]}]])
+       console.log([...summaryBatting,battingData,battingData1])
+       console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
       
-      setAllSummaryData([...allSummaryData,[{team:teamName,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData,bowlingData1]}]])
+      setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
       
 
       setSummaryBatting([])
@@ -503,6 +597,7 @@ const Main = () => {
         
 
         //update details
+         
           setTotalScore(0)
           setBowling([])
           setStriker(0)
@@ -553,7 +648,7 @@ const Main = () => {
     }
 
     setSummaryBatting([...summaryBatting,battingData])
-   
+    console.log([...summaryBatting,battingData])
      
     if(ind===11){
       
@@ -579,6 +674,7 @@ const Main = () => {
         //update details
         setStrikerOne(batFirst===0?myTeam[0].split('(')[0]:oppTeam[0].split('(')[0])
         setStrikerTwo(batFirst===0?myTeam[1].split('(')[0]:oppTeam[1].split('(')[0])
+    
           setTotalScore(0)
           setBowling([])
           setStriker(0)
@@ -637,6 +733,92 @@ const Main = () => {
 
   return (
     <View >
+   {viewScore && <Modal visible={viewScore}>
+     {allSummaryData.length===2 && <ScrollView>
+      <View style={{marginLeft:5,marginBottom:5}}>
+        <Text style ={{fontSize:25,fontWeight:'bold'}}>{batFirst===0?myname:name}</Text>
+        <View style={{flexDirection:'row'}}>
+        <Text style={{fontWeight:'bold'}}>Batting</Text>
+        <Text style={{marginLeft:26}}> Balls</Text>
+        <Text style={{marginLeft:26}}> Run</Text>
+        </View>
+        
+        {allSummaryData[1].batting.map((ele,ind)=>{
+          return 
+          <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+           <View style={{}}>
+          <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
+          <Text >{ele.outby}</Text>
+        </View>
+        <Text style={{marginLeft:29}}>{ele.ballcount}</Text>
+        <Text style={{marginLeft:39}}>{ele.run}</Text>
+        </View>
+        })
+
+        }
+
+        
+        <View style={{flexDirection:'row'}}>
+        <Text style={{fontWeight:'bold'}}>Bowling</Text>
+        <Text style={{marginLeft:26}}> Overs</Text>
+        <Text style={{marginLeft:26}}> Run Conceedd</Text>
+        <Text style={{marginLeft:26}} >Wicket</Text>
+        </View>
+
+        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+        <View style={{}}>
+          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
+   
+        </View>
+        <Text style={{marginLeft:39}}>1</Text>
+        <Text style={{marginLeft:79}}>12</Text>
+        <Text style={{marginLeft:79}}>1</Text>
+        </View>
+
+      </View>
+
+      <View style={{marginLeft:5,marginBottom:5}}>
+        <Text style ={{fontSize:25,fontWeight:'bold'}}>Team's Name</Text>
+        <View style={{flexDirection:'row'}}>
+        <Text style={{fontWeight:'bold'}}>Batting</Text>
+        <Text style={{marginLeft:26}}> Balls</Text>
+        <Text style={{marginLeft:26}}> Run</Text>
+        </View>
+
+
+        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+        <View style={{}}>
+          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
+          <Text >Not Out</Text>
+        </View>
+        <Text style={{marginLeft:29}}>4</Text>
+        <Text style={{marginLeft:39}}>12</Text>
+        </View>
+
+        
+        <View style={{flexDirection:'row'}}>
+        <Text style={{fontWeight:'bold'}}>Bowling</Text>
+        <Text style={{marginLeft:26}}> Overs</Text>
+        <Text style={{marginLeft:26}}> Run Conceedd</Text>
+        <Text style={{marginLeft:26}} >Wicket</Text>
+        </View>
+
+        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+        <View style={{}}>
+          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
+   
+        </View>
+        <Text style={{marginLeft:39}}>1</Text>
+        <Text style={{marginLeft:79}}>12</Text>
+        <Text style={{marginLeft:79}}>1</Text>
+        </View>
+
+      </View>
+
+
+      </ScrollView>}
+    </Modal>}
+
     <Modal visible={modal}>
       <View style={{flexDirection:'column',justifyContent:'center',alignItems:'center',marginTop:100}}>
        <TextInput  keyboardType="numeric" onChangeText={(text)=>setModText(text.trim())} style={{borderWidth:1,width:"70%"}} placeholder='Enter Run' />
@@ -650,7 +832,7 @@ const Main = () => {
     <View style={{width:'100%',height:"80%",backgroundColor:"black",opacity:0.7,position:'relative'}} />
     <View style={{position:"absolute"}}>
          <View style={{flexDirection:'row'}}>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} >
                 <Image style={{height:20,width:20,marginVertical:10,marginHorizontal:5}} source={require('../../../Assets/left.png')} />
             </TouchableOpacity>
             <Text style={{color:'white',fontSize:15,fontWeight:'700',marginVertical:8}} >{teamName}</Text>
@@ -658,7 +840,7 @@ const Main = () => {
          <View style={{flexDirection:"column",justifyContent:'center',alignItems:'center',marginHorizontal:78,marginTop:160}}>
             <View style={{flexDirection:'row'}}>
               <Text style={{color:'white',fontSize:25,fontWeight:'500'}}>{total}/{ind-2}</Text>
-              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>({parseInt((bowling.length-extraBall)/6)}.{(bowling.length-extraBall)%6?(bowling.length-extraBall)%6:0}/2)</Text>
+              <Text style={{color:'white',fontSize:15,fontWeight:'300',marginVertical:6,marginHorizontal:3}}>({parseInt((bowling.length-extraBall)/6)}.{(bowling.length-extraBall)%6?(bowling.length-extraBall)%6:0}/4)</Text>
             </View>
             <Text style={{color:'white',fontSize:10}}>{batFirst===0?myname.split("'")[0]+" won the toss and elected to bat":name.split("'")[0]+" won the toss and elected to bat"}</Text>
          </View>
