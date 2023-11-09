@@ -99,7 +99,7 @@ const Dashboard = () => {
               <Image style={style.subImg} source={require('../../Assets/post.png')} />
               <Text style={style.subText}>{`My\nPosts`}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>navigation.navigate("Scorecard")}>
+            <TouchableOpacity >
               <Image style={style.subImg} source={require('../../Assets/notification.png')} />
               <Text style={style.subText}>{`Notify\nDetails`}</Text>
             </TouchableOpacity>

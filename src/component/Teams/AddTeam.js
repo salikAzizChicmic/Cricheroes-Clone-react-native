@@ -46,7 +46,7 @@ const AddTeam = () => {
     }
     const getData=()=>{
         console.log("get Data")
-        const path='/user/Player'
+        const path='/Player'
     
         database()
         .ref(path)
@@ -56,12 +56,13 @@ const AddTeam = () => {
             
             const tempArr=[]
             for(let x in snapshot.val()){
+                console.log(x)
                 tempArr.push({
-                    name:snapshot.val()[x],
+                    name:x,
                     selected:false
                 })
             }
-            //console.log(tempArr)
+            console.log(tempArr)
             setAllTeam(tempArr)
             setCurrentTeam(tempArr)
 

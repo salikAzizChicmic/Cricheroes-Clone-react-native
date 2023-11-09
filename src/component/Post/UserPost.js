@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Image, Text, TouchableOpacity, View } from 'react-native'
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const UserPost = ({uid,pid,name,des,image}) => {
     const[likeStatus,setLikeStatus]=useState(false)
+    const navigation=useNavigation()
     const getLikeStatus=()=>{
         console.log("get Data")
         const path='/user/'+uid+"/post/"+pid+"/like/"+auth().currentUser.uid
@@ -34,6 +36,9 @@ const UserPost = ({uid,pid,name,des,image}) => {
         })
         .catch((err)=>console.log(err))
     }
+    const handleChat=()=>{
+        navigation.navigate("Comment",{uid:uid,pid:pid,name:name,des:des,image:image})
+    }
     useEffect(()=>{
         getLikeStatus()
     },[])
@@ -49,7 +54,7 @@ const UserPost = ({uid,pid,name,des,image}) => {
         {likeStatus&& <TouchableOpacity onPress={()=>changeLikeStatus(false)}>
             <Image style={{height:40,width:40}} source={require('../../Assets/redheart.png')} />
         </TouchableOpacity>}  
-        <TouchableOpacity style={{marginLeft:26}}>
+        <TouchableOpacity onPress={handleChat} style={{marginLeft:26}}>
             <Image style={{height:30,width:30}} source={require('../../Assets/chat.png')} />
         </TouchableOpacity>
         </View>

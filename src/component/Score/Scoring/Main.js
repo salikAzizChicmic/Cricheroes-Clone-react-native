@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 var prev=0;
 const Main = () => {
+  const[matchResult,setMatchDetails]=useState("")
   const[viewScore,setViewScrore]=useState(false)
   const[summaryBatting,setSummaryBatting]=useState([])
   const[summaryBowling,setSummaryBowling]=useState([])
@@ -341,7 +342,7 @@ const Main = () => {
           }
           setSummaryBowling([...summaryBowling,bowlingData1]) 
           prev=total
-          console.log([...summaryBowling,bowlingData1])
+          //console.log([...summaryBowling,bowlingData1])
           setWicketCount(0)
 
           const battingData={
@@ -358,19 +359,25 @@ const Main = () => {
           }
           setSummaryBatting([...summaryBatting,battingData,battingData1])
           console.log([...summaryBatting,battingData,battingData1])
-          setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+          setAllSummaryData([...allSummaryData,{team:inningCount,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData1]}])
           setSummaryBowling([])
           setSummaryBatting([])
-          console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
+          console.log([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
       
           if(batFirst===0){
-            Alert.alert(`${name} win`)
-            //setViewScrore(true)
-            navigation.navigate("Dashboard",{alldata:allSummaryData})
+            Alert.alert(name)
+            setMatchDetails(name+" won")
+            setViewScrore(true)
+            setTotalScore(0)
+            prev=0
+            //navigation.navigate("Dashboard",{alldata:allSummaryData})
           }else{
-            Alert.alert(`${myname} win`)
-            //setViewScrore(true)
-            navigation.navigate("Dashboard",{alldata:allSummaryData})
+            Alert.alert(myname)
+            setMatchDetails(myname+" won")
+            setViewScrore(true)
+            setTotalScore(0)
+            prev=0
+            //navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
           
         }else if(bowling.length-extraBall===23){
@@ -381,9 +388,9 @@ const Main = () => {
             wicketcount:wicketCount,
             run:total-prev
           }
-          setSummaryBowling([...summaryBowling,bowlingData1]) 
-          prev=total
-          console.log([...summaryBowling,bowlingData1])
+          //setSummaryBowling([...summaryBowling,bowlingData1]) 
+          prev=0
+         // console.log([...summaryBowling,bowlingData1])
           setWicketCount(0)
 
           const battingData={
@@ -400,20 +407,26 @@ const Main = () => {
           }
           setSummaryBatting([...summaryBatting,battingData,battingData1])
           console.log([...summaryBatting,battingData,battingData1])
-          setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+          setAllSummaryData([...allSummaryData,{team:inningCount,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData1]}])
           setSummaryBowling([])
           setSummaryBatting([])
-          console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
+          console.log([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
         
            if(inning1Score>(total+val)){
             if(batFirst===0){
-              Alert.alert(`${myname} win`)
-              //setViewScrore(true)
-              navigation.navigate("Dashboard",{alldata:allSummaryData})
+              Alert.alert(myname)
+              setMatchDetails(myname+" won")
+              setViewScrore(true)
+              setTotalScore(0)
+            prev=0
+              //navigation.navigate("Dashboard",{alldata:allSummaryData})
             }else{
-              Alert.alert(`${name} win`)
-              //setViewScrore(true)
-              navigation.navigate("Dashboard",{alldata:allSummaryData})
+              Alert.alert(name)
+              setMatchDetails(name+" won")
+              setViewScrore(true)
+              setTotalScore(0)
+            prev=0
+              //navigation.navigate("Dashboard",{alldata:allSummaryData})
             }
           }else{
             const bowlingData1={
@@ -424,7 +437,7 @@ const Main = () => {
             }
             setSummaryBowling([...summaryBowling,bowlingData1]) 
             prev=total
-            console.log([...summaryBowling,bowlingData1])
+            //console.log([...summaryBowling,bowlingData1])
             setWicketCount(0)
   
             const battingData={
@@ -444,11 +457,14 @@ const Main = () => {
             setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
             setSummaryBowling([])
             setSummaryBatting([])
-            console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
+            console.log([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
     
             Alert.alert("Draw")
-            //setViewScrore(true)
-            navigation.navigate("Dashboard",{alldata:allSummaryData})
+            setMatchDetails("Draw")
+            setViewScrore(true)
+            setTotalScore(0)
+            prev=0
+            //navigation.navigate("Dashboard",{alldata:allSummaryData})
           }
         }
       }
@@ -533,7 +549,7 @@ const Main = () => {
       setWicketCount(0)
       setSummaryBowling([...summaryBowling,bowlingData])
       prev=total
-      console.log([...summaryBowling,bowlingData])
+      //console.log([...summaryBowling,bowlingData])
       if(inningCount==0){
         setBowlerName(batFirst===0?oppTeam[bind]:myTeam[bind])
         setBind(bind-1)
@@ -551,9 +567,9 @@ const Main = () => {
         wicketcount:wicketCount,
         run:total-prev
       }
-      setSummaryBowling([...summaryBowling,bowlingData1]) 
-      prev=total
-      console.log([...summaryBowling,bowlingData1])
+      //setSummaryBowling([...summaryBowling,bowlingData1]) 
+      prev=0
+      //console.log([...summaryBowling,bowlingData1])
       setWicketCount(0)
       const battingData={
         name:strikerOne,
@@ -570,9 +586,9 @@ const Main = () => {
       setSummaryBatting([...summaryBatting,battingData,battingData1])
    
        console.log([...summaryBatting,battingData,battingData1])
-       console.log([...allSummaryData,[{team:inningCount,batting:summaryBatting,bowling:summaryBowling}]])
+       console.log([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
       
-      setAllSummaryData([...allSummaryData,{team:inningCount,batting:summaryBatting,bowling:summaryBowling}])
+      setAllSummaryData([...allSummaryData,{team:inningCount,batting:[...summaryBatting,battingData,battingData1],bowling:[...summaryBowling,bowlingData1]}])
       
 
       setSummaryBatting([])
@@ -611,7 +627,6 @@ const Main = () => {
           setStrikerTwo(batFirst===0?oppTeam[1].split('(')[0]:myTeam[1].split('(')[0])
         if(batFirst===0){
           setTeamName(`${name.split(' ')[0]}'s team`)
-          
         }else{
           setTeamName(`${myname.split(' ')[0]}'s team`)
         }
@@ -621,6 +636,8 @@ const Main = () => {
         Alert.alert("Insertion error")
       }
       setBowlerName(batFirst===0?myTeam[10].split('(')[0]:oppTeam[10].split('(')[0])
+      setTotalScore(0)
+      prev=0
       setInningCount(1)
       setInd(2)
       setBind(9)
@@ -634,11 +651,23 @@ const Main = () => {
       inning2()
     }
   }
-  useEffect(()=>{
 
-  },[handleOut])
+  useEffect(()=>{
+    if(striker===0){
+      setFirstScorer(0)
+      setFirstScorerBall(0)
+      
+    }else{
+
+      setSecondScorer(0)
+      setSecondScorerBall(0)
+
+    }
+  },[strikerOne,strikerTwo])
+
   const[wicketCount,setWicketCount]=useState(0)
   const handleOut=()=>{
+    console.log("Striker",striker)
     setWicketCount(wicketCount+1)
     const battingData={
       name:striker===0?strikerOne:strikerTwo,
@@ -650,6 +679,7 @@ const Main = () => {
     setSummaryBatting([...summaryBatting,battingData])
     console.log([...summaryBatting,battingData])
      
+    
     if(ind===11){
       
       const data = {
@@ -696,6 +726,8 @@ const Main = () => {
       }catch{
         Alert.alert("Insertion error")
       }
+      setTotalScore(0)
+      prev=0
       setInningCount(1)
       if(inningCount==0){
         setBowlerName(batFirst===0?oppTeam[bind]:myTeam[bind])
@@ -743,79 +775,42 @@ const Main = () => {
         <Text style={{marginLeft:26}}> Run</Text>
         </View>
         
-        {allSummaryData[1].batting.map((ele,ind)=>{
-          return 
-          <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
-           <View style={{}}>
-          <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
-          <Text >{ele.outby}</Text>
-        </View>
-        <Text style={{marginLeft:29}}>{ele.ballcount}</Text>
-        <Text style={{marginLeft:39}}>{ele.run}</Text>
-        </View>
-        })
-
-        }
-
+                {allSummaryData[0].batting.map((ele,ind)=>{
+                  return  <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+                            <View style={{}}>
+                              <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
+                              <Text >{ele.outby}</Text>
+                            </View>
+                              <Text style={{marginLeft:29}}>{ele.bowlcount}</Text>
+                              <Text style={{marginLeft:39}}>{ele.run}</Text>
+                          </View>
+                })}
         
-        <View style={{flexDirection:'row'}}>
-        <Text style={{fontWeight:'bold'}}>Bowling</Text>
-        <Text style={{marginLeft:26}}> Overs</Text>
-        <Text style={{marginLeft:26}}> Run Conceedd</Text>
-        <Text style={{marginLeft:26}} >Wicket</Text>
-        </View>
-
-        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
-        <View style={{}}>
-          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
-   
-        </View>
-        <Text style={{marginLeft:39}}>1</Text>
-        <Text style={{marginLeft:79}}>12</Text>
-        <Text style={{marginLeft:79}}>1</Text>
-        </View>
-
+                
       </View>
 
+      
       <View style={{marginLeft:5,marginBottom:5}}>
-        <Text style ={{fontSize:25,fontWeight:'bold'}}>Team's Name</Text>
+        <Text style ={{fontSize:25,fontWeight:'bold'}}>{batFirst===0?name:myname}</Text>
         <View style={{flexDirection:'row'}}>
         <Text style={{fontWeight:'bold'}}>Batting</Text>
         <Text style={{marginLeft:26}}> Balls</Text>
         <Text style={{marginLeft:26}}> Run</Text>
         </View>
-
-
-        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
-        <View style={{}}>
-          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
-          <Text >Not Out</Text>
-        </View>
-        <Text style={{marginLeft:29}}>4</Text>
-        <Text style={{marginLeft:39}}>12</Text>
-        </View>
-
         
-        <View style={{flexDirection:'row'}}>
-        <Text style={{fontWeight:'bold'}}>Bowling</Text>
-        <Text style={{marginLeft:26}}> Overs</Text>
-        <Text style={{marginLeft:26}}> Run Conceedd</Text>
-        <Text style={{marginLeft:26}} >Wicket</Text>
-        </View>
+                {allSummaryData[1].batting.map((ele,ind)=>{
+                  return  <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+                            <View style={{}}>
+                              <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
+                              <Text >{ele.outby}</Text>
+                            </View>
+                              <Text style={{marginLeft:29}}>{ele.bowlcount}</Text>
+                              <Text style={{marginLeft:39}}>{ele.run}</Text>
+                          </View>
+                })}
 
-        <View style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
-        <View style={{}}>
-          <Text style={{fontSize:15,fontWeight:'bold'}}>Shikhar</Text>
-   
-        </View>
-        <Text style={{marginLeft:39}}>1</Text>
-        <Text style={{marginLeft:79}}>12</Text>
-        <Text style={{marginLeft:79}}>1</Text>
-        </View>
-
-      </View>
-
-
+      </View>  
+               <Text style={{marginVertical:15,fontSize:25,fontWeight:"bold",textAlign:"center"}}>{matchResult}</Text> 
       </ScrollView>}
     </Modal>}
 
@@ -832,7 +827,7 @@ const Main = () => {
     <View style={{width:'100%',height:"80%",backgroundColor:"black",opacity:0.7,position:'relative'}} />
     <View style={{position:"absolute"}}>
          <View style={{flexDirection:'row'}}>
-            <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")} >
+            <TouchableOpacity >
                 <Image style={{height:20,width:20,marginVertical:10,marginHorizontal:5}} source={require('../../../Assets/left.png')} />
             </TouchableOpacity>
             <Text style={{color:'white',fontSize:15,fontWeight:'700',marginVertical:8}} >{teamName}</Text>
