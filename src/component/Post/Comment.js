@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import CommentList from './CommentList'
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
@@ -82,13 +82,28 @@ const Comment = () => {
   const handleCommentSend=()=>{
     postComment()
   }
+  const[dotModal,setDotModal]=useState(false)
+  const handleDots=()=>{
+    setDotModal(true)
+    Alert.alert(`Handle dots`)
+  }
   return (
     <View>
+        <Modal visible={dotModal} transparent={false}>
+       <View style={{flexDirection:'row',height:300}}>
+            <TouchableOpacity style={{height:"20%",width:100,backgroundColor:"white"}}>
+
+            </TouchableOpacity>
+            <TouchableOpacity style={{height:"20%",width:200,backgroundColor:"green"}}>
+
+            </TouchableOpacity>
+            </View>
+        </Modal>
         <View style={{widt:'100%',height:60,backgroundColor:'white',flexDirection:"row",justifyContent:'space-between'}}>
           <TouchableOpacity onPress={()=>navigation.navigate("Dashboard")}>
             <Image style={{height:33,width:33,marginVertical:10,marginHorizontal:10}} source={require('../../Assets/previous.png')} />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleDots}>
             <Image style={{height:30,width:30,marginVertical:12}} source={require('../../Assets/dots.png')} />
           </TouchableOpacity>
         </View>

@@ -797,20 +797,30 @@ const Main = () => {
         <Text style={{marginLeft:26}}> Balls</Text>
         <Text style={{marginLeft:26}}> Run</Text>
         </View>
-        
-                {allSummaryData[1].batting.map((ele,ind)=>{
-                  return  <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
-                            <View style={{}}>
-                              <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
-                              <Text >{ele.outby}</Text>
-                            </View>
-                              <Text style={{marginLeft:29}}>{ele.bowlcount}</Text>
-                              <Text style={{marginLeft:39}}>{ele.run}</Text>
-                          </View>
-                })}
-
+            {allSummaryData[1].batting.map((ele,ind)=>{
+              return  <View key={ind} style={{flexDirection:'row',marginVertical:5,borderWidth:1,borderColor:'lightgrey',marginRight:4}}>
+                        <View style={{}}>
+                          <Text style={{fontSize:15,fontWeight:'bold'}}>{ele.name}</Text>
+                          <Text >{ele.outby}</Text>
+                        </View>
+                          <Text style={{marginLeft:29}}>{ele.bowlcount}</Text>
+                          <Text style={{marginLeft:39}}>{ele.run}</Text>
+                      </View>
+            })}
       </View>  
                <Text style={{marginVertical:15,fontSize:25,fontWeight:"bold",textAlign:"center"}}>{matchResult}</Text> 
+               <TouchableOpacity 
+               onPress={()=>{
+                setViewScrore(false)
+                navigation.navigate("Dashboard")
+               }}  
+               style={{
+                backgroundColor:'#367545',
+                marginVertical:10,
+                borderRadius:10,
+                marginHorizontal:10}} >
+            <Text style={{color:'white',fontSize:20,fontWeight:'bold',paddingVertical:10,textAlign:'center'}} >Close</Text>
+        </TouchableOpacity>
       </ScrollView>}
     </Modal>}
 
